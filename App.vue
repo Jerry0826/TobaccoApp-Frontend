@@ -37,6 +37,8 @@
 	/*每个页面公共css */
 	@import '@/components/uni_modules/uni-scss/index.scss';
 	@import '@/static/customicons.css';
+	@import "@/colorui/main.css";
+	@import "@/colorui/icon.css";
 	// @import "uview-ui/index.scss";
 
 </style>

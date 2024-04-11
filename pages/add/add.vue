@@ -37,9 +37,9 @@
 					</radio>
 				</radio-group> -->
 			</view>
-		</view>
-		<view class="anniu" v-for="(item,index) in button">
-			<button type="primary">{{item.name}}</button>
+			<view class="anniu" v-for="(item,index) in button">
+				<button type="primary">{{item.name}}</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -258,7 +258,6 @@
 		.anniu {
 			margin-top: 48px;
 			width: 90vw;
-			margin-left: 20px;
 		}
 
 		.niming {

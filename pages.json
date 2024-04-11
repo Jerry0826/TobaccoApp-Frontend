@@ -50,6 +50,14 @@
                 "enablePullDownRefresh": false
             }
             
+        },
+        {
+        	"path" : "pages/home/homesearch/homesearch",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : "",
+        		"enablePullDownRefresh" : false
+        	}
         }
     ],
 	"globalStyle": {
