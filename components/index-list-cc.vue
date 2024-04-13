@@ -1,11 +1,15 @@
 <template>
   <view class="indexed-list-cc">
-    <view class="search-box">
-      <slot name="search">
-        <input class="input search-default" type="text" v-model="keyword" placeholder="请输入搜索信息"/>
-      </slot>
-    </view>
-
+	<view class="search-container">
+		<view class="search-box">
+			<slot name="search">
+				<input class="input search-default" type="text" v-model="keyword" placeholder="请输入搜索信息"/>
+			</slot>
+		</view>
+		<view class="close-src" @tap="search-product">
+			<button class="cu-btn round bg-cyan shadow">搜索</button>
+		</view>
+	</view>
     <view class="indexed-list-box">
       <view v-for="(itemMap, index) in indexedMap" :key="index" :id="itemMap.index.length > 0 ? ('index_' + itemMap.index.replace('#', 'end')): index"
             class="indexed-list-item-box">
@@ -146,6 +150,9 @@ export default {
     selected(item) {
       this.$emit('selected', item)
     },
+	navigateBack(){
+		uni.navigateBack()
+	},
     getIndexedLetterRect() {
       let that = this
       uni.createSelectorQuery().in(this).select('#indexed_letter_box').boundingClientRect((rect) => {
@@ -183,15 +190,29 @@ export default {
 .indexed-list-cc {
   position: relative;
   width: auto;
+  background-color: white;
 
 	
-.input{
-	border: 1px solid #ccc;
-	height: 35px;
+.search-container {
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
 }
-  .search-default {
-    margin: 24rpx;
-  }
+.close-src{
+	margin-left: 30px;
+}
+
+.input {
+  border: 1px solid #ccc;
+  height: 35px;
+  width: 100%;
+}
+
+.search-default {
+	width: 100%;
+	margin: 24rpx;
+	
+}
 
   .indexed-head-title {
     padding: 12rpx 24rpx;

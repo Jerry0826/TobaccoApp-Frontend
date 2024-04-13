@@ -1,6 +1,5 @@
 <template>
 	<view>
-
 		<home v-if="PageCur=='home'"></home>
 		<product v-if="PageCur=='product'"></product>
 		<add v-if="PageCur=='add'"></add>

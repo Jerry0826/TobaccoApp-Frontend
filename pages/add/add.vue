@@ -38,7 +38,7 @@
 				</radio-group> -->
 			</view>
 			<view class="anniu" v-for="(item,index) in button">
-				<button type="primary">{{item.name}}</button>
+				<button class="cu-btn bg-cyan lg block">{{item.name}}</button>
 			</view>
 		</view>
 	</view>
