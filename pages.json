@@ -60,7 +60,7 @@
         	}
         },
         {
-        	"path" : "pages/product/product-new/product-new",
+        	"path" : "pages/product/product-factory",
         	"style" : 
         	{
         		"navigationBarTitleText" : "",
@@ -68,7 +68,7 @@
         	}
         },
         {
-        	"path" : "pages/product/product-factory",
+        	"path" : "pages/product/tobacco-brand/tobacco-brand",
         	"style" : 
         	{
         		"navigationBarTitleText" : "",

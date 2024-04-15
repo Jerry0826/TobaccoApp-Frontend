@@ -8,7 +8,7 @@
     <view class="analyse-input">
 		<textarea placeholder="请输入内容" style="border: 1px solid #ccc; width: 95%;"></textarea>
 	</view>
-	<view class="button-submit"><button class="cu-btn bg-cyan lg" >分析</button></view>
+	<view class="button-submit"><button class="cu-btn bg-cyan lg" >分析</button></view>	
   </view>
 </template>
 
@@ -17,7 +17,6 @@
 	export default {
 		data() {
 			return {
-				
 			}
 		},
 		methods: {

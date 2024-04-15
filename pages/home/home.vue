@@ -15,7 +15,7 @@
 		<view>
 			<swiper class="screen-swiper" :class="dotStyle?'square-dot':'round-dot'" :indicator-dots="true" :circular="true"
 			 :autoplay="true" interval="2500" duration="500" 
-			 style="height: 240upx;padding: 18upx 16upx 8upx 16upx">
+			 style="height: 20px;padding: 18upx 16upx 8upx 16upx">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" 
 				@tap="toIndex(item.id)">
 					<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
@@ -32,21 +32,43 @@
 				<view class="dot-description">{{ page.description }}</view>
 			</view>
 		</view>
-		<view class="cu-card article" :class="isCard?'no-card':''">
-			<view class="cu-item shadow">
-				<view class="title"><view class="text-cut">无意者 烈火焚身;以正义的烈火拔出黑暗。我有自己的正义，见证至高的烈火吧。</view></view>
-				<view class="content">
-					<image src="https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg"
-					 mode="aspectFill"></image>
-					<view class="desc">
-						<view class="text-content"> 折磨生出苦难，苦难又会加剧折磨，凡间这无穷的循环，将有我来终结！真正的恩典因不完整而美丽，因情感而真诚，因脆弱而自由！</view>
-						<view>
-							<view class="cu-tag bg-red light sm round">正义天使</view>
-							<view class="cu-tag bg-green light sm round">史诗</view>
+		<!-- 公告 -->
+		<swiper :autoplay="true" :vertical="true" :interval="4000"
+			:circular="true" :indicator-dots="false"
+			style="height: 60upx; margin-top: 5px ;margin-left: 32upx;margin-right: 32upx;line-height: 60upx;background: #FFF0F1;border-radius: 32upx;">
+			<block v-for="(item, index) in messageList" :key="index">
+				<swiper-item >
+					<view style="display: flex;">
+						<image src="@/static/gonggao.png"
+							style="width: 140upx;height: 38upx;margin:12upx 16upx;"></image>
+						<view>{{ item.title }}</view>
+					</view>
+				</swiper-item>
+			</block>
+		</swiper>
+		<view style="background: #EDF1F7;height: 16upx;width: 100%;margin-top: 32upx;"></view>
+		<!-- 卡片 -->
+		<view v-for="(item,index) in cardlist" :key="index" @tap="toCardIndex(item.id)">
+			<view class="cu-card article" :class="isCard?'no-card':''">
+				<view class="cu-item shadow">
+					<view class="title"><view class="text-cut">{{item.title}}</view></view>
+					<view class="content">
+						<image :src="item.img"
+						 mode="aspectFill"></image>
+						<view class="desc">
+							<view class="text-content">{{item.content}}</view>
+							<view>
+								<view v-for="(tag,index) in item.taglist" :key="index" 
+								class="cu-tag light sm round "
+								:class="{'bg-red': tag.color === 'red', 'bg-green': tag.color === 'green'}">
+									{{tag.tag}}
+								</view>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
+			<view style="border-bottom: 0.1px solid rgba(0, 0, 0, 0.5);"></view>
 		</view>
 
 	</view>
@@ -56,7 +78,10 @@
 	export default {
 		data() {
 			return {
-				
+				messageList: [
+					{title:"更新！北京市公共场所卫生安全条例"},
+					{title:'国家烟草局发布重要通知'}
+				],
 				swiperList: [{
 								id: 0,
 								type: 'image',
@@ -72,8 +97,8 @@
 								type: 'image',
 								description: '卖烟不赚钱，那为何零售户都在卖烟？',
 								url: '/static/swiper-pic/3.jpg'
-							}],
-							dotStyle: true,
+				}],
+				dotStyle: true,
 				navlist:[{
 						id: 0,
 						url: '/static/icon/1yancaodaquan.png',
@@ -81,7 +106,7 @@
 					},{
 						id: 1,
 						url: '/static/icon/2remenpaihang.png',
-						description: '热门排行',
+						description: '近期热门',
 					},{
 						id: 2,
 						url: '/static/icon/3guigefenxi.png',
@@ -91,6 +116,36 @@
 						url: '/static/icon/4shoucangyanpin.png',
 						description: '收藏烟品',
 					}
+				],
+				cardlist: [
+					{
+						id: 0,
+						title: '从河北邯郸初中生遇害事件谈未成年人犯罪与烟草专卖执法的严格性'	,
+						img: '/static/card/1.jpg',
+						content: '河北邯郸市初中生王某某被害案件引起了社会广泛关注，也引发了人们对于犯罪分子的惩罚和执法部门的执行力度的观点和看法。',
+						taglist: [
+							{tag: '烟草', color: 'green'},
+							{tag: '未成年', color: 'red'},
+						]
+					},{
+						id: 1,
+						title: '一场火车上的“烟雾战争'	,
+						img: 'https://res.yanyue.cn/common/news/ctpics/202403/22/1711088031202980.png',
+						content: '在这个快节奏的世界里，火车不仅是连接城市与城市之间的纽带，更是一个微缩的社会舞台。最近，一位女士在火车上的吸烟区上演了一出“独角戏”，引发了一场关于吸烟权利与非吸烟者权益的“烟雾战争”。',
+						taglist: [
+							{tag: '烟草', color: 'green'},
+							{tag: '讨论', color: 'red'},
+						]
+					},{
+						id: 1,
+						title: '有一种想念，叫我想吸烟了'	,
+						img: 'https://res1.yanyue.cn:5232/common/news/upctpics/202403/22/1711088848122524.jpg',
+						content: '独在异乡为异客，每逢佳节倍思亲。这是刻在中国人骨子里的无法抹去的思乡思亲情结。',
+						taglist: [
+							{tag: '烟草', color: 'green'},
+							{tag: '讨论', color: 'red'},
+						]
+					},
 				]
 			};
 		},
@@ -126,7 +181,14 @@
 						})
 						break;
 				}
-			}
+			},
+			toCardIndex: function(cardid){
+				switch(cardid){
+					case 0:
+						window.location.href ='https://www.yanyue.cn/news/4708';
+						break;
+				}
+			},
 		}
 	}
 </script>
@@ -173,7 +235,9 @@
 	display: flex; /* 使用 Flex 布局 */
 	justify-content: space-between; /* 图标之间均匀分布 */
 	align-items: center; /* 垂直居中对齐 */
-	padding: 25px; /* 可根据需要调整 */
+	padding: 20px; /* 可根据需要调整 */
+	margin-top: -15px;
+	margin-bottom: 10px;
 }
 .dot-item {
 	width: 60px; /* 图标容器宽度 */
@@ -191,5 +255,9 @@
 }
 .icon_search{
 	
+}
+.cu-card{
+	margin-top: -15px;
+	height: 170px;
 }
 </style>

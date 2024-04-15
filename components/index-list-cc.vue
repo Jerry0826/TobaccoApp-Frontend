@@ -148,7 +148,22 @@ export default {
   },
   methods: {
     selected(item) {
-      this.$emit('selected', item)
+      // 获取选中元素的名字
+          const itemName = item[this.nameKey]; // 假设名字存储在元素的nameKey属性中
+      
+          // 构建动态跳转路径，传递选中元素的名字作为参数
+          const url = '/pages/product/tobacco-brand/tobacco-brand?name=' + itemName;
+		if(itemName != "卷烟品牌"){
+          // 跳转到新页面，携带参数
+          uni.navigateTo({
+            url: url,
+            success: res => {
+              console.log('页面跳转成功');
+            },
+            fail: err => {
+              console.error('页面跳转失败', err);
+            }
+          });}
     },
 	navigateBack(){
 		uni.navigateBack()
