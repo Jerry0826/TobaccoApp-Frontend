@@ -6,7 +6,7 @@
 		</cu-custom>
 		<view style="height: 10px;"></view>
 		<view class="search-box">
-			<view class="close-src" @tap="navigateBack">
+			<view class="close-src" @tap="goBack">
 				<icon class="cuIcon-back"></icon>
 			</view>
 			<!-- mSearch组件 如果使用原样式，删除组件元素-->
@@ -99,7 +99,7 @@
 			blur(){
 				uni.hideKeyboard()
 			},
-			navigateBack: function() {
+			goBack: function() {
 				uni.navigateTo({
 					url: '/pages/home/home',
 				})
@@ -197,11 +197,10 @@
 						icon: 'none',
 						duration: 2000
 					});
+					uni.navigateTo({
+						url: '/pages/product/tobacco-brand/tobacco-brand?name='+keyword ,
+					})
 				}
-				uni.navigateTo({
-					url: '/pages/product/tobacco-brand/tobacco-brand?name='+keyword ,
-				})
-				
 				//以下是示例跳转淘宝搜索，可自己实现搜索逻辑
 				
 				// //#ifdef APP-PLUS

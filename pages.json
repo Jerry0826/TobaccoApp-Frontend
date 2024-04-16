@@ -74,6 +74,14 @@
         		"navigationBarTitleText" : "",
         		"enablePullDownRefresh" : false
         	}
+        },
+        {
+        	"path" : "pages/analyse/analyseResult",
+        	"style" : 
+        	{
+        		"navigationBarTitleText" : "",
+        		"enablePullDownRefresh" : false
+        	}
         }
     ],
 	"globalStyle": {
