@@ -1,5 +1,5 @@
 <template>
-  <view>
+  <view class="page">
     <cu-custom bgColor="bg-gradual-blue">
       <block slot="content">评论分析</block>
     </cu-custom>
@@ -100,7 +100,11 @@ import {http} from "../../utils/request.js";
 	margin-top: 0px;
 	margin-right:0px;
 }
-
+.page{
+	/* width: 100rpx; */
+	height: 1800rpx;
+	background-color: white;
+}
 
 
 </style>

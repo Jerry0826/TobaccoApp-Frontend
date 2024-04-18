@@ -101,7 +101,7 @@
 			},
 			goBack: function() {
 				uni.navigateTo({
-					url: '/pages/home/home',
+					url: '/',
 				})
 			},
 			//加载默认搜索关键字
