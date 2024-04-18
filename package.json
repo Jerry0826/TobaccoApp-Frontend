@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "echarts": "^5.5.0"
+    "echarts": "^5.5.0",
+    "element-ui": "^2.15.14"
   },
   "devDependencies": {},
   "scripts": {

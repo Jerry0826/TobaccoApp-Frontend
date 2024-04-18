@@ -16,12 +16,14 @@
 	<view style="float: left; align-items: end; font-size: 18px" v-if="score == 0" >
 		您的输入不包含情感词
 	</view>
+	<analyse-result v-if="score>0" :results="results"></analyse-result>
 		
   </view>
 </template>
 
-
 <script>
+import analyseResult from "./analyseResult.vue";
+import {http} from "../../utils/request.js";
 	export default {
 		data() {
 			return {
@@ -51,17 +53,18 @@
 				var reqList = [];
 				//根据列表中的子句构造请求
 				for (var i in list) {
-				    reqList.push(uni.request({
-				      url: "http://localhost:8000/api/analyze_comment?comment=" + list[i],
-				      method: 'GET'
-					}));
+				    reqList.push(
+					http({
+						url: "/analyze_comment?comment=" + list[i],
+					})
+					);
 				}
 				console.log(reqList);
 				//同步发送多个请求（按list的顺序）
 				this.results = []; //清空results
 				Promise.all(reqList).then((res) => {
 				    res.forEach((item, index) => {
-				      if (index == 0) {
+					  if (index == 0) {
 				        this.score = Math.round(item.data.result * 10000) / 100;
 				      }
 				      var score = Math.round(item.data.result * 10000) / 100;
@@ -75,6 +78,9 @@
 				    console.error(error);
 				});
 			}
+		},
+		components:{
+			analyseResult,
 		}
 	}
 </script>

@@ -11,6 +11,40 @@ import my from './pages/my/my.vue'
 Vue.component('my',my)
 import cuCustom from './components/cu-custom.vue'
 Vue.component('cu-custom',cuCustom)
+import {
+  Pagination,
+  Menu,
+  MenuItem,
+  Input,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Backtop,
+  Option,
+  Select,
+  Button,
+  Rate,
+  Table,
+  TableColumn,
+  Progress,
+  Loading,
+} from "element-ui";
+import "element-ui/lib/theme-chalk/index.css";
+Vue.use(Pagination);
+Vue.use(Menu);
+Vue.use(MenuItem);
+Vue.use(Input);
+Vue.use(Radio);
+Vue.use(RadioGroup);
+Vue.use(RadioButton);
+Vue.use(Backtop);
+Vue.use(Option);
+Vue.use(Select);
+Vue.use(Button);
+Vue.use(Rate);
+Vue.use(Table);
+Vue.use(TableColumn);
+Vue.use(Progress);
 // #ifndef VUE3
 import Vue from 'vue'
 // import uView from "uview-ui";
