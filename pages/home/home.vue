@@ -180,6 +180,21 @@
 							url:'/pages/product/product-factory'
 						})
 						break;
+					case 1:
+						uni.navigateTo({
+							url:'/pages/home/hot'
+						})
+						break;
+					case 2:
+						uni.navigateTo({
+							url:'/pages/home/hot'
+						})
+						break;
+					case 3:
+						uni.navigateTo({
+							url:'/pages/home/hot'
+						})
+						break;
 				}
 			},
 			toCardIndex: function(cardid){

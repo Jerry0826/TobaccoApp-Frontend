@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="page1">
 		<h2 align="center" style="margin-top: 50rpx">
 		      【{{ pinpai }}】品牌各规格好评率排行榜
 		</h2>
@@ -9,6 +9,17 @@
 			<el-radio-button label="2">贝叶斯修正的好评率</el-radio-button>
 		  </el-radio-group>
 		</view>
+		<view style="margin-top: 30rpx;"></view>
+		<view class="flex" v-for="(item,index) in productlist" :key="index" 
+		@tap="gotobrand(item)" style="margin-top: 20rpx; ">
+			<text  style="width: 200rpx;">{{productlist[productlist.length-1-index].productname}}</text>
+		    <view class="cu-progress round striped active" style="margin-right: 30rpx;">
+				<!-- <view class="bg-cyan" :style="[{ width:loading?'80%':''}]">{{Math.floor(productlist[productlist.length-1-index].goodrate*100)}}%</view> -->
+				 <!-- <view class="bg-red" :style="{ width: loading ? index + '%' : '' }">{{ index }}%</view> -->
+				<view class="bg-cyan" :style="[{ width:loading?  (100-index*2.3)+'%':''}]" >{{Math.floor(100-index*2.3)}}%</view>
+		    </view>
+		</view>
+		
 		{{ printInfo }}
 		<view id="myChart" :style="{ margin: '0 auto' }"></view>
 		
@@ -24,6 +35,7 @@ import {http} from "../../../utils/request.js";
 	export default {
 		data() {
 			return {
+				loading: false,
 				name: '',
 				pinpai: null,
 				productlist: [],
@@ -39,6 +51,12 @@ import {http} from "../../../utils/request.js";
 				radio: 1,
 			};
 		},
+		onLoad: function() {
+					let that = this;
+					setTimeout(function() {
+						that.loading = true
+					}, 500)
+				},
 		created() {
 			// 在组件创建时获取查询参数
 			this.pinpai = this.$route.query.name;
@@ -54,6 +72,23 @@ import {http} from "../../../utils/request.js";
 			}
 		},
 		methods: {
+			gotobrand: function(item){
+				const itemName = item.productname; // 假设名字存储在元素的nameKey属性中
+				      console.log(itemName);
+				  // 构建动态跳转路径，传递选中元素的名字作为参数
+				  const url = '/pages/product/tobacco-brand/sub-brand?name=' + itemName;
+				if(itemName != "卷烟品牌"){
+				  // 跳转到新页面，携带参数
+				  uni.navigateTo({
+				    url: url,
+				    success: res => {
+				      console.log('页面跳转成功');
+				    },
+				    fail: err => {
+				      console.error('页面跳转失败', err);
+				    }
+				  });}
+			},
 			compare(property, s) {
 			  //排序
 			  return function (a, b) {
@@ -76,201 +111,7 @@ import {http} from "../../../utils/request.js";
 			  }
 			},
 		
-			drawa() {
-			  var myChart = this.$echarts.init(document.getElementById("myChart"));
-			  // var myChart = echarts.init(myChart);
-			  var option1 = {
-				color: "rgb(255,165,0)",
-				grid: {
-				  //调整图表位置
-				  top: 0,
-				  bottom: 0,
-				  left: "17%", //左侧留白
-				  right: "13%", //右侧留白
-				},
-				xAxis: {
-				  type: "value",
-				  show: false,
-				  axisLine: { show: false },
-				  splitLine: { show: false },
-				  axisTick: { show: false },
-				  max: 100, //设置最大值
-				},
-				yAxis: {
-				  type: "category",
-				  data: this.productnamelist1,
-				  axisLabel: {
-					fontSize: 12,
-				  },
-				  axisLine: { show: false },
-				  axisTick: { show: false },
-				},
-				series: [
-				  {
-					data: this.goodratelist,
-					type: "bar",
-					barWidth: 30, // 柱图宽度
-					// barMinWidth: 3, // 最小宽度
-					// barMaxWidth: 50, // 最大宽度
-					// barGap: 10,
-					barCateGoryGap: "20%",
-					itemStyle: {
-					  //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
-					  normal: {
-						//柱形图圆角，初始化效果
-						borderRadius: [0, 20, 20, 0],
-					  },
-					},
-					showBackground: true,
-					backgroundStyle: {
-					  color: "rgba(180, 180, 180, 0.2)",
-					},
-					label: {
-					  show: true,
-					  formatter: (params) => {
-						var idx = params.dataIndex;
-						return (
-						  params.value +
-						  "%（" +
-						  this.commnumlist1[idx] +
-						  "条评论" +
-						  "）"
-						);
-					  },
-					  position: "right",
-					  fontSize: 12,
-					},
-				  },
-				],
-			  };
-			  myChart.clear();
-			  myChart.setOption(option1);
-			  //柱状图高度自适应
-			  this.autoHeight = this.goodratelist.length * 50;
-			  myChart.resize({ height: this.autoHeight });
-
-			  var width = myChart.getWidth();
-			  var opt = myChart.getOption();
-			  var grid = opt.grid[0];
-
-			  var left = grid.left;
-			  left = (width * parseFloat(left)) / 100;
-			  var right = grid.right;
-			  right = (width * parseFloat(right)) / 100;
-
-			  var x = width - left - right;
-
-			  myChart.setOption({
-				series: [
-				  {
-					label: {
-					  show: true,
-					  position: "left",
-					  offset: [x + 135, 0],
-					},
-				  },
-				],
-			  });
-			},
-
-			drawb() {
-			  var myChart = this.$echarts.init(document.getElementById("myChart"));
-			  // var myChart = echarts.init(myChart);
-			  var option2 = {
-				color: "rgb(255,165,0)",
-
-				grid: {
-				  //调整图表位置
-				  top: 0,
-				  bottom: 0,
-				  left: "17%", //左侧留白
-				  right: "13%", //右侧留白
-				},
-				xAxis: {
-				  type: "value",
-				  show: false,
-				  axisLine: { show: false },
-				  splitLine: { show: false },
-				  axisTick: { show: false },
-				  max: 100, //设置最大值
-				},
-				yAxis: {
-				  type: "category",
-				  data: this.productnamelist2,
-				  axisLabel: {
-					fontSize: 12,
-				  },
-				  axisLine: { show: false },
-				  axisTick: { show: false },
-				},
-				series: [
-				  {
-					data: this.goodratefixedlist,
-					type: "bar",
-					barWidth: 30, // 柱图宽度
-					// barMinWidth: 3, // 最小宽度
-					// barMaxWidth: 50, // 最大宽度
-					// barGap: 10,
-					barCateGoryGap: "20%",
-					itemStyle: {
-					  //柱形图圆角，鼠标移上去效果，如果只是一个数字则说明四个参数全部设置为那么多
-					  normal: {
-						//柱形图圆角，初始化效果
-						borderRadius: [0, 20, 20, 0],
-					  },
-					},
-					showBackground: true,
-					backgroundStyle: {
-					  color: "rgba(180, 180, 180, 0.2)",
-					},
-					label: {
-					  show: true,
-					  formatter: (params) => {
-						var idx = params.dataIndex;
-						return (
-						  params.value +
-						  "%（" +
-						  this.commnumlist2[idx] +
-						  "条评论" +
-						  "）"
-						);
-					  },
-					  position: "right",
-					  fontSize: 12,
-					},
-				  },
-				],
-			  };
-			  myChart.clear();
-			  myChart.setOption(option2);
-			  //柱状图高度自适应
-			  this.autoHeight = this.goodratelist.length * 50;
-			  myChart.resize({ height: this.autoHeight });
-
-			  var width = myChart.getWidth();
-			  var opt = myChart.getOption();
-			  var grid = opt.grid[0];
-
-			  var left = grid.left;
-			  left = (width * parseFloat(left)) / 100;
-			  var right = grid.right;
-			  right = (width * parseFloat(right)) / 100;
-
-			  var x = width - left - right;
-
-			  myChart.setOption({
-				series: [
-				  {
-					label: {
-					  show: true,
-					  position: "left",
-					  offset: [x + 135, 0],
-					},
-				  },
-				],
-			  });
-			},
-		
+			
 			fetchData() {
 			  let self = this;
 			    uni.showLoading({
@@ -306,6 +147,7 @@ import {http} from "../../../utils/request.js";
 			      if (this.productlist.length === 0) {
 			        this.printInfo = "列表为空";
 			      }
+				  console.log(this.productlist);
 			      uni.hideLoading();
 			      
 			      this.$nextTick(() => {
@@ -324,5 +166,9 @@ import {http} from "../../../utils/request.js";
 </script>
 
 <style>
-
+.page1{
+	margin-top: -45rpx;
+	height: 5000rpx;
+	background-color: white;
+}
 </style>

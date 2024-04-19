@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="page">
 		<view class="fixed">
 			<cu-custom :isBack="true" bgColor="bg-shadeTop text-white">
 				<block slot="backText">返回</block>
@@ -27,7 +27,7 @@
 							<text class="cuIcon-title text-green"></text> Tab-{{item.name}}</view>
 					</view>
 					<view class="cu-list menu-avatar">
-						<view class="cu-item">
+						<!-- <view class="cu-item">
 							<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);"></view>
 							<view class="content">
 								<view class="text-grey">凯尔</view>
@@ -41,8 +41,8 @@
 								<view class="text-grey text-xs">22:20</view>
 								<view class="cu-tag round bg-grey sm">5</view>
 							</view>
-						</view>
-						<view class="cu-item">
+						</view> -->
+						<!-- <view class="cu-item">
 							<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/img/champion/Taric.png);">
 								<view class="cu-tag badge">99+</view>
 							</view>
@@ -102,7 +102,7 @@
 								<view class="text-grey text-xs">22:20</view>
 								<view class="cuIcon-notice_forbid_fill text-gray"></view>
 							</view>
-						</view>
+						</view> -->
 					</view>
 				</view>
 			</scroll-view>
@@ -179,6 +179,10 @@
 </script>
  
 <style>
+	.page{
+		height: 2000rpx;
+		background-color: white;
+	}
 	.fixed {
 		position: fixed;
 		z-index: 99;
@@ -217,6 +221,8 @@
 	}
  
 	.VerticalBox {
+		height: 1000rpx;
+		height: 100%;
 		display: flex;
 	}
  
