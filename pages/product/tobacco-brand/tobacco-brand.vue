@@ -5,20 +5,24 @@
 		</h2>
 		<view class="grid-item item1" style="margin-top: 20px">
 		  <el-radio-group v-model="radio" @change="radioChange">
-			<el-radio-button label="1">原始好评率</el-radio-button>
-			<el-radio-button label="2">贝叶斯修正的好评率</el-radio-button>
+			<el-radio-button label="1"  @tap="showSorted()">原始好评率</el-radio-button>
+			<el-radio-button label="2"  @tap="showReversed()">贝叶斯修正的好评率</el-radio-button>
 		  </el-radio-group>
 		</view>
 		<view style="margin-top: 30rpx;"></view>
-		<view class="flex" v-for="(item,index) in productlist" :key="index" 
-		@tap="gotobrand(item)" style="margin-top: 20rpx; ">
-			<text  style="width: 200rpx;">{{productlist[productlist.length-1-index].productname}}</text>
-		    <view class="cu-progress round striped active" style="margin-right: 30rpx;">
-				<!-- <view class="bg-cyan" :style="[{ width:loading?'80%':''}]">{{Math.floor(productlist[productlist.length-1-index].goodrate*100)}}%</view> -->
-				 <!-- <view class="bg-red" :style="{ width: loading ? index + '%' : '' }">{{ index }}%</view> -->
-				<view class="bg-cyan" :style="[{ width:loading?  (100-index*2.3)+'%':''}]" >{{Math.floor(100-index*2.3)}}%</view>
-		    </view>
+		<view class="flex" v-for="(item, index) in currentList" :key="index" @tap="gotobrand(item)" style="margin-top: 20rpx;">
+			<text style="width: 200rpx;">{{ item.productname }}</text>
+			<view class="cu-progress round striped active" style="margin-right: 30rpx;">
+				<view class="bg-cyan" :style="{ width: loading ? (currentRate(item) * 100) + '%' : '' }">{{ Math.floor(currentRate(item) * 100) }}%</view>
+			</view>
 		</view>
+		<!-- <view class="flex" v-for="(item,index) in sortedProductList" :key="index"
+		@tap="gotobrand(item)" style="margin-top: 20rpx; ">
+			<text  style="width: 200rpx;">{{sortedProductList[index].productname}}</text>
+		    <view class="cu-progress round striped active" style="margin-right: 30rpx;"> -->
+				<!-- <view class="bg-cyan" :style="[{ width:loading?  (sortedProductList[index].goodrate*100)+'%':''}]" >{{Math.floor(sortedProductList[index].goodrate*100)}}%</view>
+		    </view>
+		</view> -->
 		
 		{{ printInfo }}
 		<view id="myChart" :style="{ margin: '0 auto' }"></view>
@@ -36,16 +40,18 @@ import {http} from "../../../utils/request.js";
 		data() {
 			return {
 				loading: false,
-				name: '',
+				showReversedList: true, // 控制是否显示1列表
+				showSortedList: false, // 控制是否显示2列表
+				showGoodRateValue: true, // 控制是否显示 item.goodrate
 				pinpai: null,
 				productlist: [],
 				idList: [],
 				rawdata: [],
 				productnamelist1: [],
 				productnamelist2: [],
-				goodratelist: [],
+				goodratelist: [],//好评率
 				goodratefixedlist: [],
-				commnumlist1: [],
+				commnumlist1: [],//评论数量
 				commnumlist2: [],
 				printInfo: "",
 				radio: 1,
@@ -64,12 +70,29 @@ import {http} from "../../../utils/request.js";
 		mounted() {
 			//template挂载到页面时调用
 			this.fetchData();
+			 // 在页面加载时默认选中第一个按钮
+			this.showSorted();
 		},
 		watch: {
 			// 监视路由参数变化
 			'$route.query.name'(newName) {
 				this.name = newName;
 			}
+		},
+		computed:{
+			reversedProductList() {
+			  // 返回 productlist 数组的倒序数组
+			  return this.productlist.slice().reverse();
+			},
+			sortedProductList() {
+			  // 按照 goodrate 属性进行排序
+			  return this.productlist.slice().sort((a, b) => b.goodrate - a.goodrate);
+			},
+			currentList() {
+			  // 根据按钮状态返回不同的列表
+			  return this.showReversedList ? this.reversedProductList : this.sortedProductList;
+			},
+			
 		},
 		methods: {
 			gotobrand: function(item){
@@ -104,13 +127,27 @@ import {http} from "../../../utils/request.js";
 		
 			radioChange() {
 			  if (this.radio == 1) {
-				this.drawa();
+				// this.drawa();
+				this.showSorted();
 			  } else if (this.radio == 2) {
 				console.log("changed");
-				this.drawb();
+				// this.drawb();
+				this.showReversed();
 			  }
 			},
-		
+			//原始好评率
+			showReversed() {
+			  this.showReversedList = true;
+			  this.showGoodRateValue = true;
+			},
+			//贝叶斯修正好评率
+			showSorted() {
+			  this.showReversedList = false;
+			  this.showGoodRateValue = false;
+			},
+			currentRate(item) {
+			  return this.showGoodRateValue ? item.goodratefixed : item.goodrate;
+			},
 			
 			fetchData() {
 			  let self = this;
@@ -147,11 +184,14 @@ import {http} from "../../../utils/request.js";
 			      if (this.productlist.length === 0) {
 			        this.printInfo = "列表为空";
 			      }
+				  console.log("productlist:" );
 				  console.log(this.productlist);
+				  console.log("goodratelist");
+				  console.log(this.productnamelist1);
 			      uni.hideLoading();
 			      
 			      this.$nextTick(() => {
-			        this.drawa();
+			        // this.drawa();
 			      });
 			    }).catch((error) => {
 			      uni.hideLoading();
@@ -168,7 +208,7 @@ import {http} from "../../../utils/request.js";
 <style>
 .page1{
 	margin-top: -45rpx;
-	height: 5000rpx;
+	height: 3000rpx;
 	background-color: white;
 }
 </style>
