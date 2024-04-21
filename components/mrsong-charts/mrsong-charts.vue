@@ -179,36 +179,36 @@ export default {
 	},
 	methods: {
 		initchartsData() {
-			if (this.type == 'mount' || this.type == 'pie' || this.type == 'ring' || this.type == 'funnel') {
-				return {
-					series: [
-						{
-							data: [
-								{
-									name: '一班',
-									value: 82
-								},
-								{
-									name: '二班',
-									value: 63
-								},
-								{
-									name: '三班',
-									value: 50
-								},
-								{
-									name: '四班',
-									value: 40
-								},
-								{
-									name: '五班',
-									value: 30
-								}
-							]
-						}
-					]
-				};
-			} else {
+			// if (this.type == 'mount' || this.type == 'pie' || this.type == 'ring' || this.type == 'funnel') {
+				// return {
+			// 		series: [
+			// 			{
+			// 				data: [
+			// 					{
+			// 						name: '一班',
+			// 						value: 82
+			// 					},
+			// 					{
+			// 						name: '二班',
+			// 						value: 63
+			// 					},
+			// 					{
+			// 						name: '三班',
+			// 						value: 50
+			// 					},
+			// 					{
+			// 						name: '四班',
+			// 						value: 40
+			// 					},
+			// 					{
+			// 						name: '五班',
+			// 						value: 30
+			// 					}
+			// 				]
+			// 			}
+			// 		]
+			// 	};
+			// } else {
 				return {
 					categories: ['2008', '2009', '2010','2011', '2012', '2013','2014', '2015','2016', '2017', '2018', '2019', '2020'],
 					series: [
@@ -222,7 +222,7 @@ export default {
 						}
 					]
 				};
-			}
+			// }
 		},
 		assignDeep(target) {
 			// 判断是否是纯粹对象

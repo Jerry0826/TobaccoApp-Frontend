@@ -24,13 +24,16 @@
 			  :stroke-width="26"
 			  :percentage="results[0][1] - 0"
 			  define-back-color="#32cd32"
+			  text-color="white"
 			  style="grid-column: 2 / span 3"
 			></el-progress>
+			
           <view style="grid-column: 5 / span 1; place-self: start">
             <uni-icons type="hand-down" size="40" color="#32cd32"></uni-icons>
           </view>
         </view>
       </view>
+	  
       <view class="commentsBox" v-if="posList.length > 0">
         <view class="comments1">正向评价：</view>
         <view class="result">
@@ -54,12 +57,12 @@ import * as echarts from "echarts";
 export default {
   data() {
     return {
-      sentiment: "",
-      posList: [],
-      negList: [],
+		sentiment: "",
+		posList: [],
+		negList: [],
     };
-  },
-  props: ["results", "bertLabels"],
+	},
+	props: ["results", "bertLabels"],
   created() {
     console.log(this.results);
     for (let i = 0; i < this.results.length; i++) {

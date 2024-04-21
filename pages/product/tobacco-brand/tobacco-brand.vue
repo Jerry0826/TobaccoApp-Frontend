@@ -162,14 +162,14 @@ import {http} from "../../../utils/request.js";
 			        pinpai: this.pinpai,
 			      }
 			    }).then((res) => {
-			      this.productlist = res.data.list;
-			      this.productlist.sort(this.compare("goodrate", 1));
-			      for (var i = 0; i < this.productlist.length; i++) {
-			        var ai = this.productlist[i];
-			        this.productnamelist1.push(ai.productname);
-			        var change = parseInt(parseFloat(ai.goodrate) * 100);
-			        this.goodratelist.push(change);
-			        this.commnumlist1.push(ai.commnum);
+					this.productlist = res.data.list;
+					this.productlist.sort(this.compare("goodrate", 1));
+					for (var i = 0; i < this.productlist.length; i++) {
+					var ai = this.productlist[i];
+					this.productnamelist1.push(ai.productname);
+					var change = parseInt(parseFloat(ai.goodrate) * 100);
+					this.goodratelist.push(change);
+					this.commnumlist1.push(ai.commnum);
 			      }
 			    
 			      this.productlist.sort(this.compare("goodratefixed", 1));
@@ -208,7 +208,7 @@ import {http} from "../../../utils/request.js";
 <style>
 .page1{
 	margin-top: -45rpx;
-	height: 3000rpx;
+	height: 4500rpx;
 	background-color: white;
 }
 </style>

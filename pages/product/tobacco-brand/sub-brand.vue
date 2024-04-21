@@ -13,7 +13,7 @@
 		</view>
 		<view class="mrsongcharts">
 			<h3 style="margin-bottom: -50rpx;">产品评价随时间变化：</h3>
-			<mrsongCharts type='column'  title="" align='left'>
+			<mrsongCharts type='column' :charts-data="newChartsData" title="" align='left'>
 			</mrsongCharts>
 		</view>
 		<view class="comments">
@@ -35,33 +35,75 @@ import liuPhotoWall from '@/components/liu-photo-wall/liu-photo-wall.vue';
 import htzRate from '@/components/htz-rate/htz-rate.vue';
 import mrsongCharts from '@/components/mrsong-charts/mrsong-charts.vue';
 import piaoyiCommentList from '@/components/piaoyi-commentList/piaoyi-commentList.vue';
+import {http} from "../../../utils/request.js";
+
+const textureDegreeOptions = ["差劲", "一般", "不错"];
+const tasteDegreeOptions = ["较差", "一般", "很好"];
+const priceDegreeOptions = ["昂贵", "还行", "实惠"];
+const packageDegreeOptions = ["难看", "普通", "好看"];
+const qualityDegreeOptions = ["较差", "一般", "好"];
+const burnDegreeOptions = ["过快", "适当"];
+
 	export default {
 		data() {
 			return {
+				newChartsData:{
+					categories: ['2008', '2009', '2010','2011', '2012', '2013','2014', '2015','2016', '2017', '2018', '2019', '2020'],
+					series: [
+						{
+							name: '评论数',
+							data: [7, 127, 96, 121, 103, 52,37,56,61,37,11,12,3]
+						},
+						{
+							name: '好评数',
+							data: [18, 80, 51, 89, 65, 28, 20, 25, 24, 18, 5, 3, 0]
+						}
+					],
+				},
 				pinpai: '',
 				score: '4',
-				dataList: [
-				                "味道",
-				                "口感",
-								"纯正",
-								"价格",
-								"包装",
-								"便宜",
-								"口粮",
-								"回味",
-								"味道",
-								"口感",
-								"纯正",
-								"价格",
-								"包装",
-								"便宜",
-								"口粮",
-								"回味",
-								"精品",
-								"不错",
-								"焦油",
-								"烟嘴",
-				            ],
+				productId: '',
+				wordList: [],
+				dataList: [],  //词云图数据
+				productName: "",
+				rating: "",
+				comparison: [], //常被比较的规格
+				compIdList: [],
+				commyearList: [],
+				commnumList: [],
+				goodnumList: [],
+				notgoodnumList: [],
+
+				tag: "-1",
+				tagData: [],
+				textureTag: "",
+				textureTagNum: 0,
+				tasteTag: "",
+				tasteTagNum: 0,
+				priceTag: "",
+				priceTagNum: 0,
+				packageTag: "",
+				packageTagNum: 0,
+				qualityTag: "",
+				qualityTagNum: 0,
+				burnTag: "",
+				burnTagNum: 0,
+
+				senti: "3", //情感信息，-1表示sentiment为空
+				commentsToShow: [], //评论总体
+				allComments: [],
+				goodComments: [], //好评
+				neutralComments: [], //中评
+				badComments: [], //差评
+
+				currentPage: 1,
+				currentSize: 20,
+				commentsNum: 1,
+
+				data: [],
+				flag: 1,
+				
+				chartsData: [], //柱状图数据
 				apprises: [{
 				                    avatarUrl: '', //头像
 				                    name: '单挑猫的老鼠', //昵称
@@ -108,9 +150,39 @@ import piaoyiCommentList from '@/components/piaoyi-commentList/piaoyi-commentLis
 			}
 		},
 		created() {
-			// 在组件创建时获取查询参数
-			this.pinpai = this.$route.query.name;
+		  // 在组件创建时获取查询参数
+		  this.pinpai = this.$route.query.name;
+		  http({
+			url: '/get_rating',
+			method: 'GET',
+			data: {
+			  productName: this.pinpai,//注意，原型系统的后端是通过id来获取数据的，这里对后端进行了修改
+			}
+		  }).then((res) => {
+			console.log(res);
+			this.productId = res.data.productId;
+			this.score = res.data.rating / 2;
+			// Promise链，在第一个请求成功后，触发第二个请求
+			return http({
+			  url: '/show_word_cloud',
+			  method: 'GET',
+			  data: {
+				productId: this.productId,
+			  }
+			});
+		  }).then((res) => {
+			// console.log(res);
+			this.wordList = res.data.list;
+			// for(var i=0;i<this.wordList.length;i++){this.dataList[i] = this.wordList[i].name;}
+			// for循环的执行是同步的，而上面的请求是异步的，无法完成词云图数据的正常显示
+			this.dataList = this.wordList.map(item => item.name);//存放评价词
+			
+			this.getRatingByTime();
+		  }).catch((error) => {
+			console.error('Error:', error);
+		  });
 		},
+
 		methods: {
 			change(e) {
 			            console.log('==========', e)
@@ -120,8 +192,65 @@ import piaoyiCommentList from '@/components/piaoyi-commentList/piaoyi-commentLis
 			  uni.navigateTo({
 			  	url: '/pages/product/tobacco-brand/comments',
 			  })
-			}
+			},
+			getRatingByTime(){
+				http({
+							url: '/show_comments',
+							method: 'GET',
+							data: {
+							  productId: this.productId,
+							}
+				      })
+				      .then((res) => {
+				        this.allComments = res.data.list;
+				        this.tagData = res.data.tag_data;
+				        this.commyearList = res.data.comm_year;
+				        this.commnumList = res.data.comm_num;
+				        this.goodnumList = res.data.good_num;
+				        this.notgoodnumList = res.data.not_good_num;
+				
+				        this.textureTag = textureDegreeOptions[this.tagData[0].degree];
+				        this.textureTagNum = this.tagData[0].num;
+				        this.tasteTag = tasteDegreeOptions[this.tagData[1].degree];
+				        this.tasteTagNum = this.tagData[1].num;
+				        this.priceTag = priceDegreeOptions[this.tagData[2].degree];
+				        this.priceTagNum = this.tagData[2].num;
+				        this.packageTag = packageDegreeOptions[this.tagData[3].degree];
+				        this.packageTagNum = this.tagData[3].num;
+				        this.qualityTag = qualityDegreeOptions[this.tagData[4].degree];
+				        this.qualityTagNum = this.tagData[4].num;
+				        this.burnTag = burnDegreeOptions[this.tagData[5].degree];
+				        this.burnTagNum = this.tagData[5].num;
+				        this.flag = this.tagData[5].showBurn;
+				
+				        for (var i in this.allComments) {
+				          //存在sentiment为空的评论
+				          if (this.allComments[i].sentiment == "2")
+				            this.goodComments.push(this.allComments[i]);
+				          if (this.allComments[i].sentiment == "1")
+				            this.neutralComments.push(this.allComments[i]);
+				          if (this.allComments[i].sentiment == "0")
+				            this.badComments.push(this.allComments[i]);
+				        }
+				        this.commentsToShow = this.allComments;
+				        this.commentsNum = this.commentsToShow.length;
+						console.log("111goodnumlist每一年的好评数量");
+						console.log(this.goodnumList);
+						console.log("222评论数总量");
+						console.log(this.commnumList);
+						// this.chartsData.series[0].data = this.commnumList;
+						// this.chartsData.series[1].data = this.goodnumList;
+						console.log(this.chartsData);
+				        this.$nextTick(() => {
+				          // this.drawChart();
+				        });
+				      });
+			},
+			drawChart(){
+				
+			},
 		},
+		
 		components:{liuPhotoWall,htzRate,mrsongCharts,piaoyiCommentList},
 	}
 </script>
