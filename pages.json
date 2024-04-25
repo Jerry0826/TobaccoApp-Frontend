@@ -92,14 +92,6 @@
         	}
         },
         {
-        	"path" : "pages/product/tobacco-brand/comments",
-        	"style" : 
-        	{
-        		"navigationBarTitleText" : "",
-        		"enablePullDownRefresh" : false
-        	}
-        },
-        {
         	"path" : "pages/home/hot",
         	"style" : 
         	{

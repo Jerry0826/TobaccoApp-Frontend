@@ -39,6 +39,7 @@ import {http} from "../../../utils/request.js";
 	export default {
 		data() {
 			return {
+				productId: '',
 				loading: false,
 				showReversedList: true, // 控制是否显示1列表
 				showSortedList: false, // 控制是否显示2列表
@@ -97,20 +98,25 @@ import {http} from "../../../utils/request.js";
 		methods: {
 			gotobrand: function(item){
 				const itemName = item.productname; // 假设名字存储在元素的nameKey属性中
-				      console.log(itemName);
+				console.log(itemName);
+				http({
+					url: '/get_rating',
+					method: 'GET',
+					data: {
+					  productName: itemName,//注意，原型系统的后端是通过id来获取数据的，这里对后端进行了修改
+					}
+				}).then((res)=>{
+					this.productId = res.data.productId;
+					console.log(this.productId);  //因为sun-brand页面的细粒度筛选tabChange函数需要用到id
+					const url = `/pages/product/tobacco-brand/sub-brand?id=${this.productId}&name=${itemName}`;
+					console.log(url);
+					uni.navigateTo({
+						url: url ,
+					})
+				}).catch((error) => {
+					console.error('Error:', error);
+				  });
 				  // 构建动态跳转路径，传递选中元素的名字作为参数
-				  const url = '/pages/product/tobacco-brand/sub-brand?name=' + itemName;
-				if(itemName != "卷烟品牌"){
-				  // 跳转到新页面，携带参数
-				  uni.navigateTo({
-				    url: url,
-				    success: res => {
-				      console.log('页面跳转成功');
-				    },
-				    fail: err => {
-				      console.error('页面跳转失败', err);
-				    }
-				  });}
 			},
 			compare(property, s) {
 			  //排序

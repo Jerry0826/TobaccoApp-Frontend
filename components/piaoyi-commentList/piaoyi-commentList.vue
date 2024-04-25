@@ -11,10 +11,10 @@
 						</view>
 					</view>
 					<view style="display: flex;align-items: center;justify-content: space-between;">
-						<view class="cm_rate">
+						<!-- <view class="cm_rate">
 							评分
 							{{ item.commentStar }}
-						</view>
+						</view> -->
 						<text class="cm_time">{{item.commentDate}}</text>
 					</view>
 				</view>

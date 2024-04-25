@@ -16,7 +16,7 @@
 			<mrsongCharts type='column' :charts-data="newChartsData" title="" align='left'>
 			</mrsongCharts>
 		</view>
-		<view class="comments">
+<!-- 		<view class="comments">
 			<view class="title-bar"> 
 				<view class="title">
 					<h3 style="margin-top: -50rpx;">消费者评价：</h3>
@@ -25,8 +25,72 @@
 					<text>>>更多评论</text>
 				</view>
 			</view>
-			<piaoyi-comment-list :apprises="apprises"></piaoyi-comment-list>
+			
+		</view> -->
+		<!-- 原型系统评论展示区 -->
+		<view class="comments">
+			<view >
+				<h3>消费者评价：</h3>
+		
+				<el-radio-group
+					v-model="tag"
+					style="margin-top: 10px"
+					@change="tagChange"
+				>
+					<el-radio label="-1">全部({{ allComments.length }})</el-radio>
+					<el-radio label="0" v-if="textureTagNum > 0"
+					  >口感{{ textureTag }}({{ textureTagNum }})</el-radio
+					>
+					<el-radio label="1" v-if="tasteTagNum > 0"
+					  >烟味{{ tasteTag }}({{ tasteTagNum }})</el-radio
+					>
+					<el-radio label="2" v-if="priceTagNum > 0"
+					  >价格{{ priceTag }}({{ priceTagNum }})</el-radio
+					>
+					<el-radio label="3" v-if="packageTagNum > 0"
+					  >包装{{ packageTag }}({{ packageTagNum }})</el-radio
+					>
+					<el-radio label="4" v-if="qualityTagNum > 0"
+					  >品质{{ qualityTag }}({{ qualityTagNum }})</el-radio
+					>
+					<el-radio label="5" v-if="flag === 1"
+					  >燃烧{{ burnTag }}({{ burnTagNum }})</el-radio
+					>
+				</el-radio-group>
+		
+				<el-radio-group v-model="senti" @change="sentiChange" class="grid-container">
+					<el-radio-button label="3">全部</el-radio-button>
+					<el-radio-button label="0"
+					  >差评({{ badComments.length }})</el-radio-button
+					>
+					<el-radio-button label="1"
+					  >中评({{ neutralComments.length }})</el-radio-button
+					>
+					<el-radio-button label="2"
+					  >好评({{ goodComments.length }})</el-radio-button
+					>
+				</el-radio-group>
+			</view>
+		
+			<view >
+				<piaoyi-comment-list :apprises="formattedApprises"></piaoyi-comment-list>
+			</view>
+		
+			<view style="text-align: left; padding: 0px">
+				<el-pagination
+					@size-change="handleSizeChange"
+					@current-change="handleCurrentChange"
+					:current-page="currentPage"
+					:pager-count="3"
+					:page-sizes="[10, 20, 50, 100]"
+					:page-size="currentSize"
+					layout="sizes, prev, pager, next"
+					:total="commentsNum"
+				>
+				</el-pagination>
+			</view>
 		</view>
+		<!--  -->
 	</view>
 </template>
 
@@ -52,16 +116,16 @@ const burnDegreeOptions = ["过快", "适当"];
 					series: [
 						{
 							name: '评论数',
-							data: [7, 127, 96, 121, 103, 52,37,56,61,37,11,12,3]
+							data: []
 						},
 						{
 							name: '好评数',
-							data: [18, 80, 51, 89, 65, 28, 20, 25, 24, 18, 5, 3, 0]
+							data: []
 						}
 					],
 				},
 				pinpai: '',
-				score: '4',
+				score: '',
 				productId: '',
 				wordList: [],
 				dataList: [],  //词云图数据
@@ -97,7 +161,7 @@ const burnDegreeOptions = ["过快", "适当"];
 				badComments: [], //差评
 
 				currentPage: 1,
-				currentSize: 20,
+				currentSize: 10,
 				commentsNum: 1,
 
 				data: [],
@@ -105,53 +169,16 @@ const burnDegreeOptions = ["过快", "适当"];
 				
 				chartsData: [], //柱状图数据
 				apprises: [{
-				                    avatarUrl: '', //头像
-				                    name: '单挑猫的老鼠', //昵称
-				                    commentStar: 4, //评分
-				                    commentDate: '2020-05-24', //时间
-				                    teachLevel: '本人并不是很喜欢，总觉的口味平平', //描述简介
-				                    appraises: ['口味'] // 标签
-				                },{
-				                    avatarUrl: '',
-				                    name: 'Harln123',
-				                    commentStar: 4,
-				                    commentDate: '2020-05-01',
-				                    teachLevel: '烟气很薄，抽到嘴里气太容易散了，味道很清香，余味不错。但很失望，没有传的那么好抽。',
-				                    appraises: ['味道','余味' ]
-				                }, {
-				                    avatarUrl: '',
-				                    name: 'sunny999',
-				                    commentStar: 3,
-				                    commentDate: '2020-02-01',
-				                    teachLevel: '回南京过年，在超市买了一包。对这个烟的印象还是在小时候。我父亲一天两包软玉溪，偶尔抽软云，大红色的外观留下很深刻的印象。2015年后买过几次，对这个烟的印象一直不太好了。这个价位可以选择的有很多，我想这也是我最后一次买软云。呛喉，压肺，入喉不顺，后劲不足，烟气也杂，一包烟夹着其他三包烟抽完的。如果是假的不可能这几年买的都假。很遗憾吧！',
-				                    appraises: ['呛喉','压肺','后劲不足', ]
-				                },{
-				                    avatarUrl: '',
-				                    name: 'qq5dccd02b8705a',
-				                    commentStar: 5,
-				                    commentDate: '2020-01-23',
-				                    teachLevel: '很经典！柔中带刚，刚中带柔，软硬适中。味道醇厚，30元以内最顺口',
-				                    appraises: ['味道', ]
-				                },{
-				                    avatarUrl: '',
-				                    name: '天之道理而不害',
-				                    commentStar: 5,
-				                    commentDate: '2020-01-23',
-				                    teachLevel: '姐夫去云南出差带回来的。味道不错！烟草本香很猛。跟软玉溪不相伯仲吧',
-				                    appraises: ['味道',]
-				                }, {
-				                    avatarUrl: '',
-				                    name: '江苏小烟',
-				                    commentStar: 3,
-				                    commentDate: '2019-07-03',
-				                    teachLevel: '慕名买的，感觉抽大口晕，烟味不浓，烟气容易散，抽完嘴里味道差',
-				                    appraises: ['烟味不浓',]
-				                }]
+				                    name: '', //昵称
+				                    commentDate: '', //时间
+				                    teachLevel: '', //描述简介
+				                },]
 			}
 		},
 		created() {
 		  // 在组件创建时获取查询参数
 		  this.pinpai = this.$route.query.name;
+		  this.productid = this.$route.query.id;
 		  http({
 			url: '/get_rating',
 			method: 'GET',
@@ -159,7 +186,7 @@ const burnDegreeOptions = ["过快", "适当"];
 			  productName: this.pinpai,//注意，原型系统的后端是通过id来获取数据的，这里对后端进行了修改
 			}
 		  }).then((res) => {
-			console.log(res);
+			// console.log(res);
 			this.productId = res.data.productId;
 			this.score = res.data.rating / 2;
 			// Promise链，在第一个请求成功后，触发第二个请求
@@ -178,11 +205,31 @@ const burnDegreeOptions = ["过快", "适当"];
 			this.dataList = this.wordList.map(item => item.name);//存放评价词
 			
 			this.getRatingByTime();
+			// this.getComments();
 		  }).catch((error) => {
 			console.error('Error:', error);
 		  });
 		},
-
+		mounted(){
+			// this.formatComments();
+		},
+		computed: {
+		    filComments() {
+		      return this.commentsToShow.slice(
+		        (this.currentPage - 1) * this.currentSize,
+		        this.currentPage * this.currentSize
+		      );
+		    },
+			formattedApprises() {
+			      // 将filComments中的数据格式化为<piaoyi-comment-list>需要的结构
+			      return this.filComments.map(comment => ({
+			        name: comment.authorname, // 昵称
+			        commentDate: comment.commentdate, // 时间
+			        teachLevel: comment.content, // 描述简介，这里假设你希望将内容作为描述简介
+			        // 如果需要其他字段，可以继续添加
+			      }));
+			    },
+		},
 		methods: {
 			change(e) {
 			            console.log('==========', e)
@@ -215,7 +262,7 @@ const burnDegreeOptions = ["过快", "适当"];
 				        this.tasteTagNum = this.tagData[1].num;
 				        this.priceTag = priceDegreeOptions[this.tagData[2].degree];
 				        this.priceTagNum = this.tagData[2].num;
-				        this.packageTag = packageDegreeOptions[this.tagData[3].degree];
+				        this.packageTag = packageDegreeOptions[this.tagData[3].degree]; 
 				        this.packageTagNum = this.tagData[3].num;
 				        this.qualityTag = qualityDegreeOptions[this.tagData[4].degree];
 				        this.qualityTagNum = this.tagData[4].num;
@@ -234,17 +281,71 @@ const burnDegreeOptions = ["过快", "适当"];
 				        }
 				        this.commentsToShow = this.allComments;
 				        this.commentsNum = this.commentsToShow.length;
-						console.log("111goodnumlist每一年的好评数量");
-						console.log(this.goodnumList);
-						console.log("222评论数总量");
-						console.log(this.commnumList);
-						// this.chartsData.series[0].data = this.commnumList;
-						// this.chartsData.series[1].data = this.goodnumList;
-						console.log(this.chartsData);
+						// console.log("111goodnumlist每一年的好评数量");
+						// console.log(this.goodnumList);
+						// console.log("222评论数总量");
+						// console.log(this.commnumList);
+						this.newChartsData.series[0].data = this.commnumList;
+						this.newChartsData.series[1].data = this.goodnumList;
+						// console.log( this.commentsToShow);
 				        this.$nextTick(() => {
-				          // this.drawChart();
+				          // this.formatComments();
 				        });
 				      });
+			},
+			formatComments() {
+			    // 确保只处理前四个评论
+			    const commentsToFormat = this.commentsToShow.slice(0, 6);
+				console.log(commentsToFormat);
+			    // 将处理后的评论赋值给apprises
+			    this.apprises = commentsToFormat.map(comment => ({
+			      name: comment.authorname,
+			      commentDate: comment.commentdate,
+			      // 假设你想将某个字段赋值给teachLevel，这里需要替换为正确的字段名
+			      teachLevel: comment.content,
+			    }));
+			  },
+			
+			//实现分页相关方法
+			handleSizeChange(newSize) {
+			  this.currentSize = newSize;
+			},
+			handleCurrentChange(newPage) {
+			  this.currentPage = newPage;
+			},
+			//粗粒度标签切换
+			sentiChange() {
+			  this.tag = "-1";
+			  if (this.senti === "3") this.commentsToShow = this.allComments;
+			  else if (this.senti === "2") this.commentsToShow = this.goodComments;
+			  else if (this.senti === "1") this.commentsToShow = this.neutralComments;
+			  else if (this.senti === "0") this.commentsToShow = this.badComments;
+			  this.commentsNum = this.commentsToShow.length;
+			  this.currentPage = 1;
+			},
+			//细粒度标签切换
+			tagChange(label) {
+			  this.senti = 3; //单选框复位至“全部”
+			  if (label != -1) {
+				http({
+					url: '/show_comments_via_tag',
+					method: 'GET',
+					data:{
+						productId: this.productid,
+						tagIndex: label,
+						degree: this.tagData[label].degree,
+					}
+				})
+				  .then((res) => {
+					console.log(res);
+					this.commentsToShow = res.data.list;
+					this.commentsNum = this.commentsToShow.length;
+					this.currentPage = 1;
+				  });
+			  } else {
+				this.commentsToShow = this.allComments;
+				this.commentsNum = this.commentsToShow.length;
+			  }
 			},
 			drawChart(){
 				
@@ -257,7 +358,7 @@ const burnDegreeOptions = ["过快", "适当"];
 
 <style>
 .div1{
-	height: 3500rpx;
+	height: 4800rpx;
 	background-color: white;
 }
 .htz-title {
@@ -290,7 +391,13 @@ const burnDegreeOptions = ["过快", "适当"];
 .title {
   flex: 1;
 }
-
+.comments{
+	margin-top: -90rpx;
+}
+.grid-container{
+	margin-top: 20rpx;
+	margin-bottom: 10rpx;
+}
 .jump{
 	margin-top: -10rpx;
   padding: 5px 10px;
