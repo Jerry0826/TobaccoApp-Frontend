@@ -1,6 +1,6 @@
 <template>
 	<view>
-		加载中...
+		
 	</view>
 </template>
 
@@ -10,6 +10,15 @@
 			return {
 				
 			}
+		},
+		onLoad() {
+			uni.showLoading({
+				title: '加载中'
+			});
+			 
+			// setTimeout(function () {
+			// 	uni.hideLoading();
+			// }, 2000);
 		},
 		methods: {
 			

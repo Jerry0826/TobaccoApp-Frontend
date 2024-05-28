@@ -1,4 +1,5 @@
-const baseUrl="http://localhost:8000/api"
+const baseUrl="http://192.168.170.45:8000/api"
+// const baseUrl="http://localhost:8000/api"
 //导出一个名为http的方法
 export function http(option){
 	uni.showLoading({

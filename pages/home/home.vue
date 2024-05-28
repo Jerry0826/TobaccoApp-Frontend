@@ -5,7 +5,7 @@
 		</cu-custom>
 		<view style="height: 15px;"></view>
 		<!-- 搜索框 -->
-		<view class="index-search" style="margin-right: 12upx;" @tap="toSearchIndex">
+		<view class="index-search" style="margin-right: 12upx; border: 1px solid #999999; " @tap="toSearchIndex">
 			<view class="icon_search" style="text-align: left;color: #999999;">
 				<text class="cuIcon cuIcon-search" style="margin-right: 12upx"></text>
 				<text>请输入搜索内容</text>
@@ -216,6 +216,7 @@
 .index-search  {
 	background: #F6F6F6;
 	border-radius: 40upx;
+	
 	-moz-border-radius: 40upx;
 	-webkit-border-radius: 40upx;
 	-o-border-radius: 40upx;
